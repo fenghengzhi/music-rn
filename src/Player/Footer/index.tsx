@@ -1,5 +1,5 @@
 import React from 'react';
-import Index from './Controls';
+import Controls from './Controls';
 import Progress from './Progress';
 import Functions from './Functions';
 
@@ -8,7 +8,7 @@ export default function Footer() {
     <>
       <Functions />
       <Progress />
-      <Index />
+      <Controls />
     </>
   );
 }

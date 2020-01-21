@@ -65,7 +65,7 @@ function MultiLineTitle({ text }: { text: string }) {
           toValue: -layout.width,
           useNativeDriver: true,
           delay: 1000,
-          duration: 10000,
+          duration: layout.width * 48,
           easing: Easing.inOut(Easing.linear),
         }),
       ]),
@@ -76,19 +76,20 @@ function MultiLineTitle({ text }: { text: string }) {
   }, [layout.width]);
   const leftOpacity = useMemo(() => animatedValue.interpolate({
     inputRange: [
-      Math.min(-layout.width, -Number.MIN_VALUE),
-      Math.min(-layout.width + 24, -Number.MIN_VALUE),
-      Math.min(-layout.width + 24, -Number.MIN_VALUE),
-      -Number.MIN_VALUE,
-      -Number.MIN_VALUE,
+      Math.min(-layout.width, -24),
+      Math.min(-layout.width + 24, -24),
+      Math.min(-layout.width + 24, -24),
+      -24,
       0,
     ],
-    outputRange: [0, 0, 1, 1, 0, 0],
+    outputRange: [0, 0, 1, 1, 0],
   }), [animatedValue, layout.width]);
   return (
     <View>
       <ScrollView horizontal scrollEnabled={false}>
-        <Animated.View style={{ flexDirection: 'row', transform: [{ translateX: animatedValue }] }}>
+        <Animated.View
+          style={[styles.longTitleContainer, { transform: [{ translateX: animatedValue }] }]}
+        >
           <Text
             onLayout={(event) => setLayout(event.nativeEvent.layout)}
             numberOfLines={1}
@@ -106,22 +107,16 @@ function MultiLineTitle({ text }: { text: string }) {
           </Text>
         </Animated.View>
       </ScrollView>
-      <Animated.View
-        style={{
-          position: 'absolute', left: 0, top: 0, bottom: 0, height: '100%', opacity: leftOpacity,
-        }}
-      >
+      <Animated.View style={[styles.leftLinearGradientWrapper, { opacity: leftOpacity }]}>
         <LinearGradient
-          style={{ height: '100%', width: 24 }}
+          style={styles.leftLinearGradient}
           start={{ x: 1, y: 0 }}
           end={{ x: 0, y: 0 }}
           colors={['rgba(0,0,0,0)', 'rgba(0,0,0,1)']}
         />
       </Animated.View>
       <LinearGradient
-        style={{
-          position: 'absolute', right: 0, top: 0, bottom: 0, height: '100%', width: 24,
-        }}
+        style={styles.rightLinearGradient}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
         colors={['rgba(0,0,0,0)', 'rgba(0,0,0,1)']}
@@ -137,6 +132,18 @@ const styles = StyleSheet.create({
   },
   title: {
     color: '#fff',
-    textAlign: 'justify',
+    // textAlign: 'justify',
+  },
+  longTitleContainer: {
+    flexDirection: 'row',
+  },
+  rightLinearGradient: {
+    position: 'absolute', right: 0, top: 0, bottom: 0, height: '100%', width: 24,
+  },
+  leftLinearGradient: {
+    height: '100%', width: 24,
+  },
+  leftLinearGradientWrapper: {
+    position: 'absolute', left: 0, top: 0, bottom: 0, height: '100%',
   },
 });

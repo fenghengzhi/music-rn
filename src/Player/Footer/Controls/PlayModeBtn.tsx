@@ -1,7 +1,7 @@
 import React from 'react';
-import { Icon } from 'react-native-elements';
 import Toast from 'react-native-root-toast';
 import { useDispatch } from 'react-redux';
+import Icon from '../../../SharedComponents/Icon';
 import { PlayMode, useStore } from '../../store';
 import { updateStore } from '../../store/action';
 
@@ -10,7 +10,6 @@ export default function PlayModeBtn() {
   const dispatch = useDispatch();
   return (
     <Icon
-      underlayColor="#000"
       name={playMode}
       onPress={() => {
         const PlayModeValues = Object.values(PlayMode);
@@ -20,14 +19,12 @@ export default function PlayModeBtn() {
         // console.warn(PlayModeValues.indexOf(playMode))
         const toastText = {
           [PlayMode.shuffle]: '随机播放',
-          [PlayMode['loop-all']]: '随机播放',
-          [PlayMode['loop-single']]: '随机播放',
+          [PlayMode['loop-all']]: '列表循环',
+          [PlayMode['loop-single']]: '单曲循环',
         };
         Toast.show(toastText[nextPlayModeValue]);
         dispatch(updateStore({ playMode: nextPlayModeValue }));
       }}
-      type="material-community"
-      color="#fff"
     />
   );
 }

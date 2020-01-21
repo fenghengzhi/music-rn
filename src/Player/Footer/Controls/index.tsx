@@ -6,7 +6,7 @@ import Prev from './Prev';
 import Next from './Next';
 import PlayList from './PlayList';
 
-export default function Index() {
+export default function Controls() {
   return (
     <View style={styles.container}>
       <PlayModeBtn />

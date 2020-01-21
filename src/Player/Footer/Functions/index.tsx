@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import React from 'react';
-import { Icon } from 'react-native-elements';
-import { useIsPlaying, useStore } from '../store';
+import { useIsPlaying, useStore } from '../../store';
+import Icon from '../../../SharedComponents/Icon';
 
 export default function Functions() {
   const isPlaying = useIsPlaying();
@@ -10,11 +10,11 @@ export default function Functions() {
   // console.warn('isPlaying,isBuffering', isPlaying, isBuffering);
   return (
     <View style={styles.container}>
-      <Icon name="heart-outline" type="material-community" color="#fff" />
-      <Icon name="cloud-download-outline" type="material-community" color="#fff" />
-      <Icon name="bell-ring-outline" type="material-community" color="#fff" />
-      <Icon name="message-text-outline" type="material-community" color="#fff" />
-      <Icon name="dots-vertical-circle-outline" type="material-community" color="#fff" />
+      <Icon name="heart-outline" />
+      <Icon name="cloud-download-outline" />
+      <Icon name="bell-ring-outline" />
+      <Icon name="message-text-outline" />
+      <Icon name="dots-vertical-circle-outline" />
     </View>
   );
 }

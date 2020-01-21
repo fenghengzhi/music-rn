@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon } from 'react-native-elements';
+import Icon from '../../../SharedComponents/Icon';
 import { LoadedPlaybackStatus, useIsPlaying, useStore } from '../../store';
 
 export default function PlayBtn() {
@@ -8,7 +8,6 @@ export default function PlayBtn() {
 
   return (
     <Icon
-      underlayColor="#000"
       onPress={async () => {
         if (isPlaying) {
           soundObject.pauseAsync();
@@ -21,9 +20,8 @@ export default function PlayBtn() {
           }
         }
       }}
+      size={48}
       name={isPlaying ? 'pause-circle-outline' : 'play-circle-outline'}
-      type="material-community"
-      color="#fff"
     />
   );
 }
