@@ -34,6 +34,7 @@ export default function PlayListModalContent({ setVisible }: { setVisible: Funct
                   const nextAudio = audios[nextIndex];
                   await soundObject.unloadAsync();
                   await soundObject.loadAsync(nextAudio.audio);
+                  soundObject.playAsync();
                   dispatch(updateStore({ index: i }));
                 }
               }}>
@@ -95,11 +96,6 @@ function PlayModeBtn() {
           const nextPlayModeValueIndex = (currentPlayModeValueIndex + 1) % PlayModeValues.length;
           const nextPlayModeValue = PlayModeValues[nextPlayModeValueIndex];
           // console.warn(PlayModeValues.indexOf(playMode))
-          const text = {
-            [PlayMode.shuffle]: '随机播放',
-            [PlayMode['loop-all']]: '列表循环',
-            [PlayMode['loop-single']]: '单曲循环',
-          };
           dispatch(updateStore({ playMode: nextPlayModeValue }));
         }}
       >

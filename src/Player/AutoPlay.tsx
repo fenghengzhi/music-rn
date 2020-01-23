@@ -24,6 +24,7 @@ export default function AutoPlay() {
       if (didJustFinish) {
         if (audios.length === 1) {
           soundObject.setPositionAsync(0);
+          return;
         }
         switch (playMode) {
           case PlayMode.shuffle: {

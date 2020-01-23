@@ -3,7 +3,7 @@ import {PlayMode, useStore} from '../../store';
 import Icon from '../../../SharedComponents/Icon';
 import _ from 'lodash';
 import {updateStore} from '../../store/action';
-import {useDispatch} from 'react-redux';
+import {shallowEqual, useDispatch} from 'react-redux';
 
 export default function Next() {
   const { soundObject, index, audios, playMode } = useStore((state) => ({
@@ -11,13 +11,14 @@ export default function Next() {
     index: state.index,
     audios: state.audios,
     playMode: state.playMode,
-  }));
+  }), shallowEqual);
   const dispatch = useDispatch();
   return (
     <Icon
       onPress={async () => {
         if (audios.length === 1) {
           soundObject.setPositionAsync(0);
+          return;
         }
         switch (playMode) {
           case PlayMode.shuffle: {
