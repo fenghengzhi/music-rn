@@ -12,6 +12,7 @@ export default function reducer(state: State, action: { type: string, payload: P
                 return {
                     ...state,
                     ...newState,
+                    isLoaded: true,
                 } as State;
             }
             return state;

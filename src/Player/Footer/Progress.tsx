@@ -1,10 +1,9 @@
-import {
-  Slider, StyleSheet, Text, View,
-} from 'react-native';
-import React from 'react';
-import { shallowEqual } from 'react-redux';
+import {Slider, StyleSheet, Text, View} from 'react-native';
+import React, {useMemo, useState} from 'react';
+import {shallowEqual} from 'react-redux';
+import Duration from 'luxon/src/duration.js';
 // import Slider from '@react-native-community/slider';
-import { useStore } from '../store';
+import {useStore} from '../store';
 
 export default function Progress() {
   const { durationMillis, positionMillis, soundObject } = useStore((state) => ({
@@ -12,28 +11,28 @@ export default function Progress() {
     positionMillis: state.positionMillis,
     durationMillis: state.durationMillis,
   }), shallowEqual);
-
-  function format(millis) {
-    const minute = Math.floor(millis / 1000 / 60);
-    const second = Math.round((millis - minute * 1000 * 60) / 1000);
-    return `${minute.toString().padStart(2, '0')}:${second.toString().padStart(2, '0')}`;
-  }
-
-  // console.warn('didJustFinish', didJustFinish)
+  const [searchPosition, setSearchPostion] = useState(-1);
+  const positionText = useMemo(() => Duration.fromMillis(positionMillis).toFormat('mm:ss'), [positionMillis]);
+  const searchPositionText = useMemo(() => Duration.fromMillis(searchPosition).toFormat('mm:ss'), [searchPosition]);
+  const durationText = useMemo(() => Duration.fromMillis(durationMillis).toFormat('mm:ss'), [durationMillis]);
   return (
     <View style={styles.container}>
-      <Text style={styles.time}>{format(positionMillis)}</Text>
+      <Text style={styles.time}>{searchPosition > 0 ? searchPositionText : positionText}</Text>
       <Slider
         minimumValue={0}
         maximumValue={durationMillis}
-        value={positionMillis}
-        onSlidingComplete={(value) => soundObject.setPositionAsync(value)}
+        value={searchPosition >= 0 ? searchPosition : positionMillis}
+        onValueChange={value => setSearchPostion(value)}
+        onSlidingComplete={async (value) => {
+          await soundObject.setPositionAsync(value);
+          setSearchPostion(-1);
+        }}
         minimumTrackTintColor="#fff"
-        maximumTrackTintColor="#888"
+        maximumTrackTintColor="#999"
         thumbTintColor="#fff"
         style={styles.progressBar}
       />
-      <Text style={styles.time}>{format(durationMillis)}</Text>
+      <Text style={styles.time}>{durationText}</Text>
     </View>
   );
 }

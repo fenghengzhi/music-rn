@@ -40,14 +40,14 @@ export default function Header() {
             })();
             setState({ text: nextText, lineStatus: nextLineStatus });
           }}
-          style={styles.title}
+          style={styles.name}
         >
-          {audio.title}
+          {audio.name}
         </Text>
       </ScrollView>
-      {lineStatus === 'single' && <Text ellipsizeMode="clip" style={styles.title}>{text}</Text>}
+      {lineStatus === 'single' && <Text ellipsizeMode="clip" style={styles.name}>{text}</Text>}
       {lineStatus === 'multi' && <MultiLineTitle text={text} />}
-      <Text style={{ color: '#888' }}>{audio.artist}</Text>
+      <Text style={{ color: '#999' }}>{audio.artist}</Text>
     </View>
   );
 }
@@ -94,14 +94,14 @@ function MultiLineTitle({ text }: { text: string }) {
             onLayout={(event) => setLayout(event.nativeEvent.layout)}
             numberOfLines={1}
             ellipsizeMode="clip"
-            style={[styles.title, { paddingRight: 24 }]}
+            style={[styles.name, { paddingRight: 24 }]}
           >
             {text}
           </Text>
           <Text
             numberOfLines={1}
             ellipsizeMode="clip"
-            style={styles.title}
+            style={styles.name}
           >
             {text}
           </Text>
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     paddingTop: StatusBar.currentHeight,
     paddingHorizontal: 24,
   },
-  title: {
+  name: {
     color: '#fff',
     // textAlign: 'justify',
   },

@@ -1,11 +1,12 @@
-import React, { useEffect } from 'react';
-import { Provider, shallowEqual, useDispatch } from 'react-redux';
-import { StyleSheet, View } from 'react-native';
+import React, {useEffect} from 'react';
+import {Provider, shallowEqual, useDispatch} from 'react-redux';
+import {StyleSheet, View} from 'react-native';
 import Footer from './Footer';
 import Body from './Body';
 import Header from './Header';
-import useCreateStore, { useStore } from './store';
-import { updateStore } from './store/action';
+import useCreateStore, {useStore} from './store';
+import {updateStore} from './store/action';
+import AutoPlay from './AutoPlay';
 
 export default function Player() {
   return (
@@ -15,6 +16,7 @@ export default function Player() {
           isLoaded: state.isLoaded,
           soundObject: state.soundObject,
           audios: state.audios,
+          index: state.index,
         }), shallowEqual);
         const dispatch = useDispatch();
         useEffect(() => {
@@ -23,11 +25,12 @@ export default function Player() {
           return () => soundObject.unloadAsync();
         }, []);
         return !!isLoaded && (
-        <View style={styles.container}>
-          <Header />
-          <Body />
-          <Footer />
-        </View>
+          <View style={styles.container}>
+            <Header/>
+            <Body/>
+            <Footer/>
+            <AutoPlay/>
+          </View>
         );
       })}
     </Provider>

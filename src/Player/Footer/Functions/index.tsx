@@ -1,17 +1,17 @@
-import { StyleSheet, View } from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import React from 'react';
-import { useIsPlaying, useStore } from '../../store';
+import {useStore} from '../../store';
 import Icon from '../../../SharedComponents/Icon';
+import Fav from './Fav';
 
 export default function Functions() {
-  const isPlaying = useIsPlaying();
-  const soundObject = useStore((state) => state.soundObject);
+  const index = useStore((state) => state.index);
   // console.warn('didJustFinish', didJustFinish);
   // console.warn('isPlaying,isBuffering', isPlaying, isBuffering);
   return (
     <View style={styles.container}>
-      <Icon name="heart-outline" />
-      <Icon name="cloud-download-outline" />
+      <Fav key={index}/>
+      <Icon name="cloud-download-outline"/>
       <Icon name="bell-ring-outline" />
       <Icon name="message-text-outline" />
       <Icon name="dots-vertical-circle-outline" />
