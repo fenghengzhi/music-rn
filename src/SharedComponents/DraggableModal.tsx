@@ -1,25 +1,32 @@
 import React, {
-  forwardRef, ReactNodeArray, useImperativeHandle, useMemo, useRef, useState,
+  forwardRef,
+  ReactNodeArray,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
 } from 'react';
-import { PanGestureHandler, State } from 'react-native-gesture-handler';
+import {PanGestureHandler, State} from 'react-native-gesture-handler';
 import Animated, {
   block,
-  event,
-  set,
-  add,
+  Clock,
+  clockRunning,
   cond,
+  decay,
   eq,
-  sub,
+  event,
+  greaterThan,
+  lessThan,
   max,
   min,
-  debug,
+  set,
   startClock,
-  clockRunning,
-  lessOrEq,
-  stopClock, divide, Value, Clock, spring, decay, or, greaterOrEq,
+  stopClock,
+  sub,
+  Value,
 } from 'react-native-reanimated';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import { Modal } from './Modal';
+import {StyleSheet, TouchableOpacity} from 'react-native';
+import {Modal} from './Modal';
 
 interface DraggableModal {
   close: () => void,
@@ -33,8 +40,8 @@ interface DraggableModalProps {
 }
 
 const DraggableModal = forwardRef<DraggableModal, DraggableModalProps>(({
-  children, borderRadius = 0, backgroundColor,
-}: DraggableModalProps, ref) => {
+                                                                          children, borderRadius = 0, backgroundColor,
+                                                                        }: DraggableModalProps, ref) => {
   const modal = useRef<Modal>();
 
   function close() {
@@ -48,9 +55,10 @@ const DraggableModal = forwardRef<DraggableModal, DraggableModalProps>(({
   useImperativeHandle(ref, () => ({ open, close }));
 
   const [offsetY] = useState(new Value(0));
-  const [pervOffsetY] = useState(new Value(0));
+  const [prevOffsetY] = useState(new Value(0));
   const [contentHeight] = useState(new Value<number>(0));
   const [containerHeight] = useState(new Value<number>(0));
+  const [bottomOverScrollHeight] = useState(new Value(0)); // 向上滑动content到达底部后，保存手指超出滑动的距离
   const [momentumClock] = useState(new Clock());
   const [momentumV] = useState(new Value(0));
   const maxOffset = useMemo(() => max(sub(contentHeight, containerHeight), 0), [contentHeight, containerHeight]);
@@ -65,7 +73,11 @@ const DraggableModal = forwardRef<DraggableModal, DraggableModalProps>(({
       // cond(eq(contentEventState, State.END), ,
       cond(
         clockRunning(momentumClock),
-        [set(pervOffsetY, state.position)],
+        cond(greaterThan(state.position, maxOffset),
+          [set(state.position, maxOffset), stopClock(momentumClock), set(prevOffsetY, maxOffset)],
+          cond(lessThan(state.position, 0),
+            [set(state.position, 0), stopClock(momentumClock), set(prevOffsetY, 0)],
+            set(prevOffsetY, state.position))),
         [
           set(state.position, offsetY),
           set(state.velocity, momentumV),
@@ -75,22 +87,30 @@ const DraggableModal = forwardRef<DraggableModal, DraggableModalProps>(({
       ),
       decay(momentumClock, state, { deceleration: 0.997 }),
       cond(state.finished, stopClock(momentumClock)),
-      cond(greaterOrEq(state.position, maxOffset), stopClock(momentumClock)),
-      sub(0, state.position),
+      sub(0, max(min(state.position, maxOffset), 0)),
+      // sub(0, state.position),
     ]);
-  }, [offsetY, momentumClock, pervOffsetY, momentumV, maxOffset]);
+  }, [offsetY, momentumClock, prevOffsetY, momentumV, maxOffset]);
   const contentEvent = useMemo(() => event([
     {
       nativeEvent: ({ translationY, state, velocityY }) => block([
-        set(offsetY, min(add(sub(0, translationY), pervOffsetY), maxOffset)),
-        set(momentumV, velocityY),
+        set(offsetY, min(sub(prevOffsetY, translationY, bottomOverScrollHeight), maxOffset)),
+        set(momentumV, sub(0, velocityY)),
+        cond(eq(state, State.BEGAN), [
+          stopClock(momentumClock),
+        ]),
+        cond(eq(state, State.ACTIVE),
+          cond(greaterThan(sub(prevOffsetY, translationY, bottomOverScrollHeight), maxOffset),
+            set(bottomOverScrollHeight, sub(prevOffsetY, translationY, maxOffset)))),
         cond(eq(state, State.END), [
-          set(pervOffsetY, min(add(sub(0, translationY), pervOffsetY), maxOffset)),
+          set(prevOffsetY, min(sub(prevOffsetY, translationY), maxOffset)),
           startClock(momentumClock),
+          set(bottomOverScrollHeight, 0),
         ]),
       ]),
     },
-  ]), [offsetY, pervOffsetY]);
+  ]), [offsetY, prevOffsetY]);
+  // @ts-ignore
   return (
     <Modal ref={modal}>
       <Animated.View style={{ flex: 1 }}>
@@ -123,7 +143,8 @@ const DraggableModal = forwardRef<DraggableModal, DraggableModalProps>(({
                 <Animated.View
                   // onLayout={contentHeightEvent}
                   onLayout={(e) => contentHeight.setValue(e.nativeEvent.layout.height)}
-                  style={{ transform: [{ translateY: contentTransY }] } as any}
+                  // @ts-ignore
+                  style={{ transform: [{ translateY: contentTransY }] }}
                 >
                   {children.slice(1)}
                 </Animated.View>
