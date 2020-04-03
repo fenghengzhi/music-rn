@@ -1,6 +1,6 @@
-import React, {useRef} from 'react';
+import React, { useRef } from 'react';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {GestureResponderEvent, StyleSheet, TouchableWithoutFeedback} from 'react-native';
+import { GestureResponderEvent, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 
 export default function Icon(
   {

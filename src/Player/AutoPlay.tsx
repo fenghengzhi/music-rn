@@ -1,8 +1,8 @@
-import {useEffect} from 'react';
-import {PlayMode, useStore} from './store';
-import {shallowEqual, useDispatch} from 'react-redux';
-import {updateStore} from './store/action';
+import { useEffect } from 'react';
+import { shallowEqual, useDispatch } from 'react-redux';
 import _ from 'lodash';
+import { PlayMode, useStore } from './store';
+import { updateStore } from './store/action';
 
 export default function AutoPlay() {
   const {
@@ -11,7 +11,7 @@ export default function AutoPlay() {
     audios,
     soundObject,
     playMode,
-  } = useStore(state => ({
+  } = useStore((state) => ({
     didJustFinish: state.didJustFinish,
     index: state.index,
     audios: state.audios,

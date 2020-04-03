@@ -1,17 +1,14 @@
-import React, { useState } from 'react';
-import { SlideModal } from '../../../SharedComponents/Modal';
+import React, {useRef} from 'react';
 import Icon from '../../../SharedComponents/Icon';
-import PlayListModalContent from './PlayListModalContent';
+import PlayListModal from './PlayListModal';
 
 export default function PlayList() {
-  const [visible, setVisible] = useState(false);
+  const playListModal = useRef<PlayListModal>();
   return (
     <>
-      <SlideModal setVisible={setVisible} visible={visible} heightPercent={75}>
-        <PlayListModalContent setVisible={setVisible} />
-      </SlideModal>
+      <PlayListModal ref={playListModal} />
       <Icon
-        onPress={() => setVisible(true)}
+        onPress={() => playListModal.current.open()}
         name="playlist-music"
       />
     </>

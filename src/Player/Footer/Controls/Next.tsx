@@ -1,12 +1,14 @@
 import React from 'react';
-import {PlayMode, useStore} from '../../store';
-import Icon from '../../../SharedComponents/Icon';
 import _ from 'lodash';
-import {updateStore} from '../../store/action';
-import {shallowEqual, useDispatch} from 'react-redux';
+import { shallowEqual, useDispatch } from 'react-redux';
+import { PlayMode, useStore } from '../../store';
+import Icon from '../../../SharedComponents/Icon';
+import { updateStore } from '../../store/action';
 
 export default function Next() {
-  const { soundObject, index, audios, playMode } = useStore((state) => ({
+  const {
+    soundObject, index, audios, playMode,
+  } = useStore((state) => ({
     soundObject: state.soundObject,
     index: state.index,
     audios: state.audios,

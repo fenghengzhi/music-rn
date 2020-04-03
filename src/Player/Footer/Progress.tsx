@@ -1,9 +1,11 @@
-import {Slider, StyleSheet, Text, View} from 'react-native';
-import React, {useMemo, useState} from 'react';
-import {shallowEqual} from 'react-redux';
+import {
+  Slider, StyleSheet, Text, View,
+} from 'react-native';
+import React, { useMemo, useState } from 'react';
+import { shallowEqual } from 'react-redux';
 import Duration from 'luxon/src/duration.js';
 // import Slider from '@react-native-community/slider';
-import {useStore} from '../store';
+import { useStore } from '../store';
 
 export default function Progress() {
   const { durationMillis, positionMillis, soundObject } = useStore((state) => ({
@@ -22,7 +24,7 @@ export default function Progress() {
         minimumValue={0}
         maximumValue={durationMillis}
         value={searchPosition >= 0 ? searchPosition : positionMillis}
-        onValueChange={value => setSearchPostion(value)}
+        onValueChange={(value) => setSearchPostion(value)}
         onSlidingComplete={async (value) => {
           await soundObject.setPositionAsync(value);
           setSearchPostion(-1);

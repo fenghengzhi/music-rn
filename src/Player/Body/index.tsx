@@ -1,6 +1,10 @@
-import {Animated, Easing, LayoutRectangle, StyleSheet, View} from 'react-native';
-import React, {useEffect, useMemo, useRef, useState} from 'react';
-import {useIsPlaying, useStore} from '../store';
+import {
+  Animated, Easing, LayoutRectangle, StyleSheet, View,
+} from 'react-native';
+import React, {
+  useEffect, useMemo, useRef, useState,
+} from 'react';
+import { useIsPlaying, useStore } from '../store';
 
 export default function Body() {
   const [layout, setLayout] = useState<LayoutRectangle>({
@@ -13,10 +17,10 @@ export default function Body() {
   const [animatedValue] = useState(new Animated.Value(0));
   const animatedCurrentValueRef = useRef(0);
   const rotateZ = useMemo(() => animatedValue.interpolate({
-      inputRange: [0, 1],
-      outputRange: ['0deg', '360deg'],
-    }),
-    [animatedValue]);
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  }),
+  [animatedValue]);
   useEffect(() => {
     animatedValue.addListener((state) => animatedCurrentValueRef.current = state.value);
   }, []);

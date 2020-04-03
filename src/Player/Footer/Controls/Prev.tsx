@@ -1,17 +1,21 @@
 import React from 'react';
-import Icon from '../../../SharedComponents/Icon';
-import {LoadedPlaybackStatus, PlayMode, useIsPlaying, useStore} from '../../store';
 import _ from 'lodash';
-import {updateStore} from '../../store/action';
-import {shallowEqual, useDispatch} from 'react-redux';
+import { shallowEqual, useDispatch } from 'react-redux';
+import Icon from '../../../SharedComponents/Icon';
+import {
+  LoadedPlaybackStatus, PlayMode, useIsPlaying, useStore,
+} from '../../store';
+import { updateStore } from '../../store/action';
 
 export default function Prev() {
-  const { soundObject, index, audios, playMode } = useStore((state) => ({
+  const {
+    soundObject, index, audios, playMode,
+  } = useStore((state) => ({
     soundObject: state.soundObject,
     index: state.index,
     audios: state.audios,
     playMode: state.playMode,
-  }),shallowEqual);
+  }), shallowEqual);
   const dispatch = useDispatch();
   return (
     <Icon

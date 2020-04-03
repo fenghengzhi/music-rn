@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {Animated, TouchableWithoutFeedback} from 'react-native';
+import React, { useState } from 'react';
+import { Animated, TouchableWithoutFeedback } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function Fav() {
@@ -25,5 +25,6 @@ export default function Fav() {
           color={fav ? 'red' : '#fff'}
         />
       </Animated.View>
-    </TouchableWithoutFeedback>);
+    </TouchableWithoutFeedback>
+  );
 }

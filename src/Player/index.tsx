@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import {Provider, shallowEqual, useDispatch} from 'react-redux';
 import {StyleSheet, View} from 'react-native';
+import {setSiblingWrapper} from 'react-native-root-siblings';
 import Footer from './Footer';
 import Body from './Body';
 import Header from './Header';
@@ -9,8 +10,12 @@ import {updateStore} from './store/action';
 import AutoPlay from './AutoPlay';
 
 export default function Player() {
+  const store = useCreateStore();
+  useEffect(() => {
+    setSiblingWrapper((sibling) => <Provider store={store}>{sibling}</Provider>);
+  }, [store]);
   return (
-    <Provider store={useCreateStore()}>
+    <Provider store={store}>
       {React.createElement(() => {
         const { isLoaded, soundObject, audios } = useStore((state) => ({
           isLoaded: state.isLoaded,
