@@ -19,7 +19,7 @@
     "lodash": "latest",
     "luxon": "latest",
     "react": "~16.9.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-37.0.0.tar.gz",
+    "react-native": "0.61.4",
     "react-native-gesture-handler": "latest",
     "react-native-reanimated": "latest",
     "react-native-root-siblings": "latest",
