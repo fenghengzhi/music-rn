@@ -58,6 +58,7 @@ const DraggableModal = forwardRef<DraggableModal, DraggableModalProps>(({
   const [prevOffsetY] = useState(new Value(0));
   const [contentHeight] = useState(new Value<number>(0));
   const [containerHeight] = useState(new Value<number>(0));
+  // TODO:应该可以不需要存这个值
   const [bottomOverScrollHeight] = useState(new Value(0)); // 向上滑动content到达底部后，保存手指超出滑动的距离
   const [momentumClock] = useState(new Clock());
   const [momentumV] = useState(new Value(0));
