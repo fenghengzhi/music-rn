@@ -6,8 +6,9 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {PanGestureHandler, State} from 'react-native-gesture-handler';
+import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import Animated, {
+  add,
   block,
   Clock,
   clockRunning,
@@ -25,8 +26,8 @@ import Animated, {
   sub,
   Value,
 } from 'react-native-reanimated';
-import {StyleSheet, TouchableOpacity} from 'react-native';
-import {Modal} from './Modal';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import { Modal } from './Modal';
 
 interface DraggableModal {
   close: () => void,
@@ -40,8 +41,8 @@ interface DraggableModalProps {
 }
 
 const DraggableModal = forwardRef<DraggableModal, DraggableModalProps>(({
-                                                                          children, borderRadius = 0, backgroundColor,
-                                                                        }: DraggableModalProps, ref) => {
+  children, borderRadius = 0, backgroundColor,
+}: DraggableModalProps, ref) => {
   const modal = useRef<Modal>();
 
   function close() {
@@ -58,8 +59,6 @@ const DraggableModal = forwardRef<DraggableModal, DraggableModalProps>(({
   const [prevOffsetY] = useState(new Value(0));
   const [contentHeight] = useState(new Value<number>(0));
   const [containerHeight] = useState(new Value<number>(0));
-  // TODO:应该可以不需要存这个值
-  const [bottomOverScrollHeight] = useState(new Value(0)); // 向上滑动content到达底部后，保存手指超出滑动的距离
   const [momentumClock] = useState(new Clock());
   const [momentumV] = useState(new Value(0));
   const maxOffset = useMemo(() => max(sub(contentHeight, containerHeight), 0), [contentHeight, containerHeight]);
@@ -95,18 +94,17 @@ const DraggableModal = forwardRef<DraggableModal, DraggableModalProps>(({
   const contentEvent = useMemo(() => event([
     {
       nativeEvent: ({ translationY, state, velocityY }) => block([
-        set(offsetY, min(sub(prevOffsetY, translationY, bottomOverScrollHeight), maxOffset)),
+        set(offsetY, min(sub(prevOffsetY, translationY), maxOffset)),
         set(momentumV, sub(0, velocityY)),
         cond(eq(state, State.BEGAN), [
           stopClock(momentumClock),
         ]),
         cond(eq(state, State.ACTIVE),
-          cond(greaterThan(sub(prevOffsetY, translationY, bottomOverScrollHeight), maxOffset),
-            set(bottomOverScrollHeight, sub(prevOffsetY, translationY, maxOffset)))),
+          cond(greaterThan(sub(prevOffsetY, translationY), maxOffset),
+            set(prevOffsetY, add(translationY, maxOffset)))), // 内容在滑动到底部后手指继续上滑一段距离，再下滑时可以直接滚动
         cond(eq(state, State.END), [
           set(prevOffsetY, min(sub(prevOffsetY, translationY), maxOffset)),
           startClock(momentumClock),
-          set(bottomOverScrollHeight, 0),
         ]),
       ]),
     },
