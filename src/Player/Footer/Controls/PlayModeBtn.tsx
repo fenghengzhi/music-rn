@@ -22,7 +22,7 @@ export default function PlayModeBtn() {
           [PlayMode['loop-all']]: '列表循环',
           [PlayMode['loop-single']]: '单曲循环',
         };
-        Toast.show(toastText[nextPlayModeValue]);
+        Toast.show(toastText[nextPlayModeValue], { containerStyle: { backgroundColor: '#ccc' }, textColor: '#000' });
         dispatch(updateStore({ playMode: nextPlayModeValue }));
       }}
     />

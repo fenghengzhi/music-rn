@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Animated, TouchableWithoutFeedback } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Toast from 'react-native-root-toast';
 
 export default function Fav() {
   const [fav, setFav] = useState(false);
@@ -8,6 +9,7 @@ export default function Fav() {
   return (
     <TouchableWithoutFeedback
       onPress={() => {
+        Toast.show('仅供演示',{ containerStyle: { backgroundColor: '#ccc' }, textColor: '#000' });
         setFav(!fav);
         Animated.sequence([
           Animated.timing(scale, { toValue: 1.5, duration: 200, useNativeDriver: true }),
