@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Animated, TouchableWithoutFeedback } from 'react-native';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function Fav() {
   const [fav, setFav] = useState(false);
@@ -17,9 +17,7 @@ export default function Fav() {
       }}
     >
       <Animated.View style={{ transform: [{ scale }] }}>
-        <MaterialIcon
-          // ref={iconRef}
-
+        <MaterialCommunityIcons
           size={24}
           name={fav ? 'heart' : 'heart-outline'}
           color={fav ? 'red' : '#fff'}

@@ -1,38 +1,38 @@
-import {createStore, Store} from 'redux';
-import {Audio} from 'expo-av';
-import {useRef} from 'react';
+import { createStore, Store } from 'redux';
+import { Audio } from 'expo-av';
+import { useRef } from 'react';
+import { useSelector, useStore as useReduxStore } from 'react-redux';
 import audios from '../audios';
-import {useSelector, useStore as useReduxStore} from 'react-redux';
 import reducer from './reducer';
 
 export default function useCreateStore() {
-    const store = useRef<undefined | Store<State>>();
-    if (!store.current) {
-        store.current = createStore(reducer, {
-            soundObject: new Audio.Sound(),
-            audios: audios,
-            index: 0,
-            playMode: PlayMode['loop-all'],
-        } as State);
-    }
-    return store.current as Store<State>;
+  const store = useRef<undefined | Store<State>>();
+  if (!store.current) {
+    store.current = createStore(reducer, {
+      soundObject: new Audio.Sound(),
+      audios,
+      index: 0,
+      playMode: PlayMode['loop-all'],
+    } as State);
+  }
+  return store.current as Store<State>;
 }
 
 export function useStore(): State;
 export function useStore<selectedStore>(selector: (state: State) => selectedStore, equalityFn?: (prevSelectedStore, nextSelectedStore) => boolean): selectedStore;
 
 export function useStore(selector?, equalityFn?) {
-    if (!selector) {
-        return useReduxStore<State>();
-    }
-    return useSelector<State>(selector, equalityFn);
+  if (!selector) {
+    return useReduxStore<State>();
+  }
+  return useSelector<State>(selector, equalityFn);
 }
 
 export function useIsPlaying() {
-    const prevIsPlayingRef = useRef(false);
-    const isPlaying = useStore(state => state.isBuffering ? prevIsPlayingRef.current : state.isPlaying);
-    prevIsPlayingRef.current = isPlaying;
-    return isPlaying;
+  const prevIsPlayingRef = useRef(false);
+  const isPlaying = useStore((state) => (state.isBuffering ? prevIsPlayingRef.current : state.isPlaying));
+  prevIsPlayingRef.current = isPlaying;
+  return isPlaying;
 }
 
 export type LoadedPlaybackStatus = {
@@ -72,4 +72,3 @@ export enum PlayMode {
     'loop-all' = 'repeat',
     'loop-single' = 'repeat-once',
 }
-

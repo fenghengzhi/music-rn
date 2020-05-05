@@ -12,8 +12,10 @@
     "exp-minify-start": "expo start --no-dev --minify --clear --localhost"
   },
   "dependencies": {
+    "@expo/vector-icons": "^10.0.0",
     "expo": "latest",
     "expo-av": "latest",
+    "expo-blur": "~8.1.0",
     "expo-font": "latest",
     "expo-linear-gradient": "latest",
     "lodash": "latest",

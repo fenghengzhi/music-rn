@@ -1,12 +1,12 @@
-import React, {useEffect} from 'react';
-import {Provider, shallowEqual, useDispatch} from 'react-redux';
-import {StyleSheet, View} from 'react-native';
-import {setSiblingWrapper} from 'react-native-root-siblings';
+import React, { useEffect } from 'react';
+import { Provider, shallowEqual, useDispatch } from 'react-redux';
+import { StyleSheet, View } from 'react-native';
+import { setSiblingWrapper } from 'react-native-root-siblings';
 import Footer from './Footer';
 import Body from './Body';
 import Header from './Header';
-import useCreateStore, {useStore} from './store';
-import {updateStore} from './store/action';
+import useCreateStore, { useStore } from './store';
+import { updateStore } from './store/action';
 import AutoPlay from './AutoPlay';
 
 export default function Player() {
@@ -31,10 +31,10 @@ export default function Player() {
         }, []);
         return !!isLoaded && (
           <View style={styles.container}>
-            <Header/>
-            <Body/>
-            <Footer/>
-            <AutoPlay/>
+            <Header />
+            <Body />
+            <Footer />
+            <AutoPlay />
           </View>
         );
       })}

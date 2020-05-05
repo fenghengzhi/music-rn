@@ -1,11 +1,6 @@
-import React, {
-  forwardRef,
-  ReactNode, useEffect, useImperativeHandle, useRef,
-} from 'react';
-import {
-  StyleSheet, View,
-} from 'react-native';
-import RootSiblings from 'react-native-root-siblings';
+import React, { ReactNode, useEffect } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { RootSiblingPortal } from 'react-native-root-siblings';
 
 const styles = StyleSheet.create({
   modalWrapper: {
@@ -18,52 +13,37 @@ const styles = StyleSheet.create({
 });
 
 export interface Modal {
-  close: () => void,
-  open: (onModalDidAppear?:Function) => void
+    close: () => void,
+    open: (onModalDidAppear?: Function) => void
 }
 
 interface ModalProps {
-  children?: ReactNode
+    children?: ReactNode,
+    visible: boolean;
+    onModalDidAppear?: Function;
 }
 
-export const Modal = forwardRef<Modal, ModalProps>(({ children }: ModalProps, ref) => {
-  const sibling = useRef<RootSiblings>();
-  useImperativeHandle(ref, () => ({
-    open(onModalDidAppear) {
-      sibling.current = new RootSiblings(
-        <ModalWrapper onModalDidAppear={onModalDidAppear}>
-          {children}
-        </ModalWrapper>,
-      );
-    },
-    close() {
-      if (sibling.current) {
-        sibling.current.destroy();
-        sibling.current = null;
-      }
-    },
-  }));
-  useEffect(() => {
-    if (sibling.current) {
-      sibling.current.update(
-        <ModalWrapper>
-          {children}
-        </ModalWrapper>,
-      );
-    }
-  }, [children]);
-  return null;
-});
+export function Modal(props: ModalProps) {
+  const { visible, children, onModalDidAppear } = props;
+  return (
+    <ModalWrapper onModalDidAppear={onModalDidAppear}>
+      {visible && children}
+    </ModalWrapper>
+  );
+}
+
 
 function ModalWrapper({ onModalDidAppear, children }: {
-  onModalDidAppear?: Function, children: ReactNode
+    onModalDidAppear?: Function, children: ReactNode
 }) {
   useEffect(() => {
     if (onModalDidAppear) onModalDidAppear();
   }, []);
   return (
-    <View style={styles.modalWrapper}>
-      {children}
-    </View>
+    <RootSiblingPortal>
+      <View style={styles.modalWrapper}>
+        {children}
+      </View>
+    </RootSiblingPortal>
   );
 }

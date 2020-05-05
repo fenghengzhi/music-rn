@@ -1,87 +1,61 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {GestureResponderEvent, StyleSheet, Text, TouchableWithoutFeedback} from 'react-native';
+import React, { memo, useEffect, useState } from 'react';
+import { GestureResponderEvent, StyleSheet, View } from 'react-native';
 import Animated, {
-  add,
-  block,
-  cond,
-  eq,
-  event,
-  greaterThan,
-  min,
-  set, startClock,
-  stopClock,
-  sub, Value,
+  block, cond, eq, event, set, Value,
 } from 'react-native-reanimated';
-import {PanGestureHandler, TapGestureHandler,State} from 'react-native-gesture-handler';
+import { PanGestureHandler, State } from 'react-native-gesture-handler';
+import font from '@expo/vector-icons/build/vendor/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf';
+import glyphMap from '@expo/vector-icons/build/vendor/react-native-vector-icons/glyphmaps/MaterialCommunityIcons.json';
+import { shallowEqual } from 'react-redux';
+import * as Font from 'expo-font';
 
-export default function Icon(
+
+interface Icon {
+  name:keyof typeof glyphMap;
+  size?:number;
+  onPress?: (event: GestureResponderEvent) => void
+}
+const Icon = memo((
   {
     size = 24, name, onPress,
-  }: { size?: number, name: string, onPress?: (event: GestureResponderEvent) => void },
-) {
-  const iconRef = useRef<any>();
-  // const pressEvent = useMemo(() => event([
-  //   {
-  //     nativeEvent: ({ translationY, state, velocityY }) => block([
-  //       set(offsetY, min(sub(prevOffsetY, translationY), maxOffset)),
-  //       set(momentumV, sub(0, velocityY)),
-  //       cond(eq(state, State.BEGAN), [
-  //         stopClock(momentumClock),
-  //       ]),
-  //       cond(eq(state, State.ACTIVE),
-  //         cond(greaterThan(sub(prevOffsetY, translationY), maxOffset),
-  //           set(prevOffsetY, add(translationY, maxOffset)))), // 内容在滑动到底部后手指继续上滑一段距离，再下滑时可以直接滚动
-  //       cond(eq(state, State.END), [
-  //         set(prevOffsetY, min(sub(prevOffsetY, translationY), maxOffset)),
-  //         startClock(momentumClock),
-  //       ]),
-  //     ]),
-  //   },
-  // ]), [offsetY, prevOffsetY]);
-  const [shadowRadius] = useState(new Value(500));
-  // useEffect(()=>{
-  //   iconRef.current.setNativeProps({ style: { textShadowRadius: 0 } })
-  // },[])
+  }: Icon,
+) => {
+  const [shadowRadius] = useState(new Value(0));
+  const [fontIsLoaded, setFontIsLoaded] = useState(false);
+  useEffect(() => {
+    Font.loadAsync({ 'material-community': font }).then(() => setFontIsLoaded(true));
+  }, []);
   return (
     <PanGestureHandler
       onHandlerStateChange={event([{
         nativeEvent: ({ state }) => block([
-          cond(eq(state, State.BEGAN), set(shadowRadius,50)),
-          cond(eq(state, State.END), set(shadowRadius,0)),
+          cond(eq(state, State.BEGAN), set(shadowRadius, 50)),
+          cond(eq(state, State.END), set(shadowRadius, 0)),
         ]),
       }])}
-      // numberOfTaps={1}
-      // onPress={e=>console.log(e)}
-      // onPressIn={event([{nativeEvent:()=>set(shadowRadius,50)}])}
-      // onPressOut={event([{nativeEvent:()=>set(shadowRadius,0)}])}
     >
-      {/*<Text ref={iconRef} style={{ fontSize: size, color: '#fff', textShadowRadius: shadowRadius,textShadowColor:'#fff' }}>啊</Text>*/}
-      <Animated.Text style={{ fontSize: size, color: '#fff', textShadowRadius: shadowRadius,textShadowColor:'#fff' }}>啊</Animated.Text>
+      {fontIsLoaded ? (
+        <Animated.Text
+          // onPress={()=>console.log('onpress')}
+          onPress={onPress}
+          style={[styles.icon, { fontSize: size, textShadowRadius: shadowRadius }]}
+        >
+          {String.fromCharCode(glyphMap[name])}
+        </Animated.Text>
+      ) : (<Animated.Text />) }
     </PanGestureHandler>
   );
-  // return (
-  //   <TouchableWithoutFeedback
-  //     onPress={onPress}
-  //     onPressOut={() => iconRef.current.setNativeProps({ style: { textShadowRadius: 0 } })}
-  //     onPressIn={() => iconRef.current.setNativeProps({ style: { textShadowRadius: 50 } })}
-  //   >
-  //     <MaterialIcon
-  //       ref={iconRef}
-  //       size={size}
-  //       name={name}
-  //       color="#fff"
-  //       style={styles.iconShadowColor}
-  //     />
-  //   </TouchableWithoutFeedback>
-  // );
-}
-
+}, shallowEqual);
 const styles = StyleSheet.create({
-  iconShadowColor: {
+  icon: {
     textShadowColor: '#fff',
-  },
-  iconShadow: {
-    textShadowRadius: 200,
+    fontSize: 24,
+    color: '#fff',
+    fontFamily: 'material-community',
+    margin: -12,
+    padding: 12,
+    // borderWidth: 1,
+    // borderColor: '#fff',
   },
 });
+export default Icon;

@@ -42,7 +42,7 @@ export default function Prev() {
             break;
           }
           case PlayMode['loop-all']: {
-            const nextIndex = (index + 1) % audios.length;
+            const nextIndex = (index - 1 + audios.length) % audios.length;
             const nextAudio = audios[nextIndex];
             await soundObject.unloadAsync();
             await soundObject.loadAsync(nextAudio.audio);

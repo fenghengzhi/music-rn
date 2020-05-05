@@ -1,6 +1,6 @@
 // 用于适配折叠屏
-import {DeviceEventEmitter, Dimensions, ScaledSize} from 'react-native';
-import {useEffect, useState} from 'react';
+import { DeviceEventEmitter, Dimensions, ScaledSize } from 'react-native';
+import { useEffect, useState } from 'react';
 
 export default function useWindowSize() {
   const [screenSize, setScreenSize] = useState<ScaledSize>({
