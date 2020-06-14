@@ -11,7 +11,7 @@ import Header from './Header';
 import useCreateStore, { useStore } from './store';
 import { updateStore } from './store/action';
 import AutoPlay from './AutoPlay';
-import { BackgroundTest as Background } from './Background';
+import Background from './Background';
 // import { JimpBackground as Background } from './Background';
 // import { ThreeBackground1 as Background } from './Background';
 
